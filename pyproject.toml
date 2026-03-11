@@ -1,0 +1,19 @@
+[project]
+name = "bookstore"
+version = "0.1.0"
+description = "BookStore API"
+authors = [
+    {name = "Rodrigo Silvestre",email = "rodrigo291002@hotmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "factory-boy (>=3.3.3,<4.0.0)",
+    "django (>=6.0.3,<7.0.0)",
+    "djangorestframework (>=3.16.1,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
