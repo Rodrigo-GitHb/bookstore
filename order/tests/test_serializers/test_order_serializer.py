@@ -1,22 +1,47 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from django.test import TestCase
+import pytest
+from django.contrib.auth.models import User
+from product.models import Product
+from order.models import Order
+from order.serializer.order_serializers import OrderSerializer
 
-from order.factories import OrderFactory, ProductFactory
-from order.serializers import OrderSerializer
 
+@pytest.mark.django_db
+def test_order_serializer():
+    
+    user = User.objects.create_user(
+        username="testuser",
+        password="testpassword"
+    )
 
-class TestOrderSerializer(TestCase):
-    def setUp(self) -> None:
-        self.product_1 = ProductFactory()
-        self.product_2 = ProductFactory()
+    
+    product1 = Product.objects.create(
+        title="Produto 1",
+        description="Descrição do Produto 1",
+        price=100,
+        active=True
+    )
+    product2 = Product.objects.create(
+        title="Produto 2",
+        description="Descrição do Produto 2",
+        price=200,
+        active=True
+    )
 
-        self.order = OrderFactory(product=(self.product_1, self.product_2))
-        self.order_serializer = OrderSerializer(self.order)
+    
+    data = {
+        "products_id": [product1.id, product2.id], 
+        "user": user.id, 
+    }
 
-    def test_order_serializer(self):
-        serializer_data = self.order_serializer.data
-        self.assertEquals(
-            serializer_data["product"][0]["title"], self.product_1.title)
-        self.assertEquals(
-            serializer_data["product"][1]["title"], self.product_2.title)
+    
+    serializer = OrderSerializer(data=data)
+    assert serializer.is_valid(), serializer.errors  
+
+    
+    order = serializer.save()
+
+    
+    serialized_order = OrderSerializer(order).data
+
+    assert serialized_order['total'] == 300 
+    assert serialized_order['user'] == user.id  
