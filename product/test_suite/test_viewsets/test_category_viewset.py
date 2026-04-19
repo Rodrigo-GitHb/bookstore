@@ -20,7 +20,8 @@ class CategoryOrderViewSet(APITestCase):
         response = self.client.get(reverse("category-list", kwargs={"version": "v1"}))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        category_data = json.loads(response.content)
+        response_data = json.loads(response.content)
+        category_data = response_data['results']
 
         self.assertEqual(category_data[0]["title"], self.category.title)
 

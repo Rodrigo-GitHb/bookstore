@@ -23,7 +23,8 @@ class TestProductViewSet(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        product_data = json.loads(response.content)
+        response_data = json.loads(response.content)
+        product_data = response_data['results']
 
         self.assertEqual(product_data[0]['title'], self.product.title)
         self.assertEqual(product_data[0]['price'], self.product.price)
