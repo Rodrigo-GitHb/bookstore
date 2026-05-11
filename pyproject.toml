@@ -3,10 +3,10 @@ name = "bookstore"
 version = "0.1.0"
 description = "Bookstore API"
 authors = [
-    {name = "Jhonatan",email = "jhowbrows321@gmail.com"}
+    {name = "rodrig0silvestre",email = "rodrigo291002@hotmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "pytest (>=8.4.2,<9.0.0)",
     "factory-boy (>=3.3.3,<4.0.0)",
