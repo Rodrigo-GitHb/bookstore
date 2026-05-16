@@ -8,13 +8,16 @@ jobs:
     name: Quality check
     runs-on: ubuntu-22.04
 
+    env:
+      SECRET_KEY: 'random_secret_key'
+
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@master
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.11
 
       - name: Install poetry
         run: |
@@ -42,4 +45,3 @@ jobs:
           reporter: 'github-pr-review'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
