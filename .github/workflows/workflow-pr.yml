@@ -10,6 +10,8 @@ jobs:
 
     env:
       SECRET_KEY: 'random_secret_key'
+      DJANGO_ALLOWED_HOSTS: 'localhost 127.0.0.1'
+      SQL_ENGINE: django.db.backends.sqlite3
 
     steps:
       - uses: actions/checkout@v2
@@ -34,6 +36,10 @@ jobs:
         shell: bash
         run: python -m poetry install
 
+      - name: Run migrations
+        run: |
+          poetry run python manage.py migrate
+
       - name: Test
         run: |
           poetry run python manage.py test
@@ -45,4 +51,3 @@ jobs:
           reporter: 'github-pr-review'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
