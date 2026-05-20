@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         env:
           POETRY_VIRTUALENVS_CREATE: false
-        run: poetry install --no-interaction --no-root
+        run: python -m poetry install
 
       - name: Run migrations
         run: poetry run python manage.py migrate
