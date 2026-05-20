@@ -1,43 +1,38 @@
 name: Python application
 
-on: [push]
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TONODE24: true
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ['3.13']
-        poetry-version: ['2.0.1']
-
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+    env:
+      SECRET_KEY: random_secret_key
+      DJANGO_ALLOWED_HOSTS: localhost 127.0.0.1
+      SQL_ENGINE: django.db.backends.sqlite3
+      POETRY_VIRTUALENVS_CREATE: false
 
-      - name: Set up Python ${{ matrix.python-version }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11'
 
       - name: Install Poetry
         run: |
-          curl -sSL https://install.python-poetry.org | POETRY_VERSION=${{ matrix.poetry-version }} python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          python -m pip install --upgrade pip
+          python -m pip install poetry
 
       - name: Install dependencies
-        run: |
-          poetry install --no-interaction
+        run: python -m poetry install
 
-      - name: Test
-        env:
-          SECRET_KEY: "django-insecure-test-key-only"
-          DEBUG: "1"
-          DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1"
-          SQL_ENGINE: "django.db.backends.sqlite3"
+      - name: Run migrations
+        run: poetry run python manage.py migrate
 
-        run: |
-          poetry run python manage.py test
+      - name: Run tests
+        run: poetry run python manage.py test
